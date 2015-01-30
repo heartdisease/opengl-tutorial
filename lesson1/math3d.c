@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// row-major order = column-major order for identity matrix
+/* row-major order = column-major order for identity matrix */
 static GLfloat identityMatrix[] = {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
@@ -12,45 +12,43 @@ static GLfloat identityMatrix[] = {
 	0, 0, 0, 1
 };
 
-// utility functions (OpenGL matrices are stored in column-major order!)
-
 static GLfloat mat4_get(const mat4* m, int x, int y) {
-	return m->data[y + 4 * x]; // note: matrices in ogl are in column-major order!
+	return m->data[y + 4 * x]; /* matrices in OpenGL are in column-major order! */
 }
 
 static void mat4_set(mat4* m, int x, int y, GLfloat value) {
-	m->data[y + 4 * x] = value; // note: matrices in ogl are in column-major order!
+	m->data[y + 4 * x] = value; /* matrices in OpenGL are in column-major order! */
 }
 
-// interface
+/* interface */
 
 void mat4_identity(mat4* m) {
-	memcpy(m->data, identityMatrix, sizeof(identityMatrix)); // TODO good style (sizeof)?
+	memcpy(m->data, identityMatrix, sizeof(identityMatrix)); /* TODO good style (sizeof)? */
 }
 
-// from https://www.opengl.org/sdk/docs/man2/xhtml/gluPerspective.xml
+/* from https://www.opengl.org/sdk/docs/man2/xhtml/gluPerspective.xml */
 void mat4_perspective(mat4* m, GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar) {
-	GLfloat f = 1 / tan(fovy / 2.0); // = cotangent(fovy / 2f)
+	GLfloat f = 1 / tan(fovy / 2.0); /* = cotangent(fovy / 2f) */
 
-	// row 0
+	/* row 0 */
 	mat4_set(m, 0, 0, f / aspect);
 	mat4_set(m, 1, 0,       0.0f);
 	mat4_set(m, 2, 0,       0.0f);
 	mat4_set(m, 3, 0,       0.0f);
 
-	// row 1
+	/* row 1 */
 	mat4_set(m, 0, 1, 0.0f);
 	mat4_set(m, 1, 1,    f);
 	mat4_set(m, 2, 1, 0.0f);
 	mat4_set(m, 3, 1, 0.0f);
 
-	// row 2
+	/* row 2 */
 	mat4_set(m, 0, 2,                                  0.0f);
 	mat4_set(m, 1, 2,                                  0.0f);
 	mat4_set(m, 2, 2,       (zFar + zNear) / (zNear - zFar));
 	mat4_set(m, 3, 2, (2.0 * zFar * zNear) / (zNear - zFar));
 
-	// row 3
+	/* row 3 */
 	mat4_set(m, 0, 3,  0.0f);
 	mat4_set(m, 1, 3,  0.0f);
 	mat4_set(m, 2, 3, -1.0f);

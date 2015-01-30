@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// TODO review!
+/* TODO: review! */
 static GLchar* read_source(const char* source_file) {
 	long size;
 	GLchar* source;
@@ -19,20 +19,25 @@ static GLchar* read_source(const char* source_file) {
 	return source;
 }
 
-static void check_info_log(gl_shader* shader) {
+static void print_info_log(gl_shader* shader) {
 	GLchar* log_message;
 	GLint log_length;
+
+	glGetShaderiv(shader->id, GL_INFO_LOG_LENGTH, &log_length);
+
+	log_message = (GLchar*) malloc(sizeof(GLchar) * log_length);
+	glGetShaderInfoLog(shader->id, log_length, NULL, log_message);
+
+	fprintf(stderr, "%s\n", log_message);
+	free(log_message);
+}
+
+static void check_compile_status(gl_shader* shader) {
 	GLint status = GL_FALSE;
 
 	glGetShaderiv(shader->id, GL_COMPILE_STATUS, &status);
 	if (status == GL_FALSE) {
-		glGetShaderiv(shader->id, GL_INFO_LOG_LENGTH, &log_length);
-		log_message = (GLchar*) malloc(sizeof(GLchar) * (log_length + 1)); // includes '\0' or not??
-		glGetShaderInfoLog(shader->id, log_length, NULL, log_message);
-		log_message[log_length] = '\0';
-
-		fprintf(stderr, "%s\n", log_message);
-		free(log_message);
+		print_info_log(shader);
 	}
 }
 
@@ -43,7 +48,7 @@ static void create_shader(gl_shader* shader, GLchar* source_file, GLenum type) {
 	glShaderSource(shader->id, 1, (const GLchar**) &shader->source, NULL);
 }
 
-// interface
+/* interface */
 
 void create_vertex_shader(gl_shader* shader, GLchar* source_file) {
 	create_shader(shader, source_file, GL_VERTEX_SHADER);
@@ -56,7 +61,7 @@ void create_fragment_shader(gl_shader* shader, GLchar* source_file) {
 void compile_shader(gl_shader* shader) {
 	glCompileShader(shader->id);
 
-	check_info_log(shader);
+	check_compile_status(shader);
 	free(shader->source);
 }
 

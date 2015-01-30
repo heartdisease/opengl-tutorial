@@ -17,4 +17,4 @@ void mat4_multiply(mat4* result, mat4* m1, mat4* m2);
 
 void mat4_print(mat4* result);
 
-#endif // __MATH3D_H
+#endif

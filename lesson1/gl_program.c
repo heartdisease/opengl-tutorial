@@ -9,9 +9,8 @@ static void print_info_log(gl_program* program) {
 
 	glGetProgramiv(program->id, GL_INFO_LOG_LENGTH, &log_length);
 
-	log_message = (GLchar*) malloc(sizeof(GLchar) * (log_length + 1)); // includes '\0' or not??
+	log_message = (GLchar*) malloc(sizeof(GLchar) * log_length);
 	glGetProgramInfoLog(program->id, log_length, NULL, log_message);
-	log_message[log_length] = '\0';
 
 	fprintf(stderr, "%s\n", log_message);
 	free(log_message);
@@ -26,9 +25,10 @@ static void check_link_status(gl_program* program) {
 	}
 }
 
+/* interface */
+
 void create_program(gl_program* program) {
 	program->id = glCreateProgram();
-	program->attrib_pointer0 = -1;
 }
 
 void attach_shader(gl_program* program, gl_shader* shader) {
@@ -51,8 +51,16 @@ void use_program(gl_program* program) {
 	}
 }
 
-void request_attrib_location(gl_program* program, const GLchar* attrib_name) {
-	program->attrib_pointer0 = glGetAttribLocation(program->id, attrib_name);
+GLint get_attrib_location(gl_program* program, const GLchar* name) {
+	return glGetAttribLocation(program->id, name);
+}
+
+GLint get_uniform_location(gl_program* program, const GLchar* name) {
+	return glGetUniformLocation(program->id, name);
+}
+
+void upload_mat4(gl_program* program, GLint uniform_location, mat4* m) {
+	glUniformMatrix4fv(uniform_location, 1, GL_FALSE, m->data);
 }
 
 void delete_program(gl_program* program) {

@@ -20,18 +20,18 @@ static void set_vertex(geometry* geom, int i, GLfloat x, GLfloat y, GLfloat z) {
 
 void create_triangle(geometry* geom) {
 	init_geometry(geom, 3, GL_TRIANGLE_STRIP);
-	set_vertex(geom, 0,  0.0f,  1.0f, 0.0f); // top-center
-	set_vertex(geom, 1, -1.0f, -1.0f, 0.0f); // bottom-left (???)
-	set_vertex(geom, 2,  1.0f, -1.0f, 0.0f); // bottom-right (???)
+	set_vertex(geom, 0,  0.0f,  1.0f, 0.0f); /* top-center */
+	set_vertex(geom, 2,  1.0f, -1.0f, 0.0f); /* bottom-right */
+	set_vertex(geom, 1, -1.0f, -1.0f, 0.0f); /* bottom-left */
 }
 
 void create_quad(geometry* geom) {
 	init_geometry(geom, 5, GL_TRIANGLE_STRIP);
-	set_vertex(geom, 0, -1.0f,  1.0f, 0.0f); // Top Left
-	set_vertex(geom, 1,  1.0f,  1.0f, 0.0f); // Top Right
-	set_vertex(geom, 2,  1.0f, -1.0f, 0.0f); // Bottom Right
-	set_vertex(geom, 3, -1.0f, -1.0f, 0.0f); // Bottom Left
-	set_vertex(geom, 4, -1.0f,  1.0f, 0.0f); // Top Left
+	set_vertex(geom, 0, -1.0f,  1.0f, 0.0f); /* Top Left */
+	set_vertex(geom, 1,  1.0f,  1.0f, 0.0f); /* Top Right */
+	set_vertex(geom, 2,  1.0f, -1.0f, 0.0f); /* Bottom Right */
+	set_vertex(geom, 3, -1.0f, -1.0f, 0.0f); /* Bottom Left */
+	set_vertex(geom, 4, -1.0f,  1.0f, 0.0f); /* Top Left */
 }
 
 void print_geometry(geometry* geom) {

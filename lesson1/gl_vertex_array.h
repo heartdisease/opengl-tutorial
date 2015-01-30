@@ -13,4 +13,4 @@ void bind_vertex_array(gl_vertex_array* vertex_array);
 
 void delete_vertex_array(gl_vertex_array* vertex_array);
 
-#endif // __GL_VERTEX_ARRAY_H
+#endif

@@ -16,4 +16,4 @@ void compile_shader(gl_shader* shader);
 
 void delete_shader(gl_shader* shader);
 
-#endif // __GL_SHADER_H
+#endif

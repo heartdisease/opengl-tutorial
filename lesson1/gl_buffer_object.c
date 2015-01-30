@@ -14,18 +14,18 @@ void upload_buffer_data(gl_buffer_object* array_buffer, geometry* geom) {
 }
 
 void draw_array_buffer(gl_buffer_object* array_buffer, GLuint attrib_array_index) {
-	glEnableVertexAttribArray(attrib_array_index); // TODO what is happening here?
+	glEnableVertexAttribArray(attrib_array_index); /* TODO what is happening here? */
 	glBindBuffer(array_buffer->type, array_buffer->id);
 	glVertexAttribPointer(
-	   attrib_array_index,       // attribute 0; must match the layout in the shader.
-	   array_buffer->geom->size, // size
-	   GL_FLOAT,                 // type
-	   GL_FALSE,			        // normalized?
-	   0,                        // stride
-	   (void*) 0                 // array buffer offset
+	   attrib_array_index,       /* attribute 0; must match the layout in the shader. */
+	   array_buffer->geom->size, /* size */
+	   GL_FLOAT,                 /* type */
+	   GL_FALSE,			        /* normalized? */
+	   0,                        /* stride */
+	   (void*) 0                 /* array buffer offset */
 	);
 
-	glDrawArrays(array_buffer->geom->mode, 0, array_buffer->geom->length); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	glDrawArrays(array_buffer->geom->mode, 0, array_buffer->geom->length); /* Starting from vertex 0; 3 vertices total -> 1 triangle */
 	glDisableVertexAttribArray(attrib_array_index);
 }
 

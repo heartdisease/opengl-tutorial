@@ -19,4 +19,4 @@ void draw_array_buffer(gl_buffer_object* array_buffer, GLuint attrib_array_index
 
 void delete_buffer_object(gl_buffer_object* buffer_object);
 
-#endif // __GL_BUFFER_OBJECT_H
+#endif
