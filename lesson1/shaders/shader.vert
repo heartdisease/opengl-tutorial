@@ -1,10 +1,13 @@
-#version 330
-layout(location = 0) in vec3 vertex;
+#version 140
+in vec3 vertexAttrib;
+in vec3 colorAttrib; // lesson2
+
+out vec3 outColor; // lesson2
 
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 
 void main() {
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(vertex, 1.0);
-	//gl_Position = vec4(vertex, 1.0) * projectionMatrix;
+	outColor = colorAttrib; // lesson2
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexAttrib, 1.0);
 }

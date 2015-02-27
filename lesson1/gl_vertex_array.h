@@ -3,6 +3,8 @@
 
 #include <GL/glew.h>
 
+/* TODO investigate: what does this even do?? */
+
 typedef struct gl_vertex_array {
 	GLuint id;
 } gl_vertex_array;
