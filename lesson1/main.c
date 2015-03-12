@@ -1,3 +1,9 @@
+/** This program is free software. It comes without any warranty, to
+ * the extent permitted by applicable law. You can redistribute it
+ * and/or modify it under the terms of the Do What The Fuck You Want
+ * To Public License, Version 2, as published by Sam Hocevar. See
+ * http://www.wtfpl.net/ for more details. */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,15 +14,17 @@
 #include "geometry.h"
 #include "gl_utils.h"
 
-#define WINDOW_TITLE "Lesson 1"
+#define WINDOW_TITLE "Lesson 3"
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
+
+// TODO remove all variables with underscore notation!
 
 typedef struct SDLContext {
 	int width;                /* viewport width */
 	int height;               /* viewport height */
 	SDL_Window *window;       /* SDL window handle */
-	SDL_GLContext gl_context; /* OpenGL context handle */
+	SDL_GLContext glContext;  /* OpenGL context handle */
 } SDLContext;
 
 typedef struct GLResources {
@@ -39,7 +47,7 @@ typedef struct GLResources {
 	Geometry quad;
 
 	/* vertex arrays */
-	GLVertexArray triangleVAO;
+	GLVertexArray triangleVAO; // TODO find proper replacement for "VAO"
 	GLVertexArray quadVAO;
 
 	GLBuffer triangleVertexBuffer;
@@ -87,7 +95,7 @@ int initSDL(SDLContext* context, int width, int height, const char* title) {
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		width, height,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	if (!context->window) {
 		fprintf(stderr, "Failed to create window: %s\n", SDL_GetError());
 		return 0;
@@ -218,10 +226,20 @@ void initBuffers(GLResources* resources) {
 	glEnableVertexAttribArray(resources->colorAttribLocation);
 }
 
+void setViewport(SDLContext* context, GLResources* resources) {
+	glViewport(0, 0, context->width, context->height);
+
+	/* recalculate the projection matrix accordingly */
+	mat4Perspective(
+		&resources->projection_matrix,
+		45.0, ((double)context->width) / ((double)context->height),
+		0.1, 100.0);
+}
+
 int initGL(SDLContext* context, GLResources* resources) {
 	/* create the OpenGL context within our window */
-	context->gl_context = SDL_GL_CreateContext(context->window);
-	if (context->gl_context == NULL) {
+	context->glContext = SDL_GL_CreateContext(context->window);
+	if (context->glContext == NULL) {
 		fprintf(stderr, "Failed to initialize OpenGL context: %s\n", SDL_GetError());
 		return 0;
 	}
@@ -230,12 +248,13 @@ int initGL(SDLContext* context, GLResources* resources) {
 	}
 
 	/* basic OpenGL setup */
-	glViewport(0, 0, context->width, context->height); /* optional, this is the default setting anyway */
 	glClearColor(0.0, 0.0, 0.0, 1.0); /* tell OpenGL which color to use for clearing the pixel buffer (black) */
 	glEnable(GL_MULTISAMPLE); /* enables anti-aliasing */
 	/* lesson4 */
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS); /* accept fragment if it closer to the camera than the former one */
+	glDepthFunc(GL_LESS); /* accept fragment if it closer to the camera than the former one */
+
+	setViewport(context, resources);
 
 	initVertexArrays(resources);
 	initShaders(resources);
@@ -255,23 +274,11 @@ int initGL(SDLContext* context, GLResources* resources) {
 
 	initBuffers(resources);
 
-	/* initialize projection matrix */
-	mat4Perspective(
-		&resources->projection_matrix,
-		45.0, ((double)context->width) / ((double)context->height),
-		0.1, 100.0);
-
-	// BEGIN DEBUG
-	mat4Print(&resources->projection_matrix);
-	mat4Identity(&resources->model_view_matrix);
-	mat4Print(&resources->model_view_matrix);
-	// END DEBUG
-
 	return 1;
 }
 
 void setMatrixUniforms(GLResources* resources) {
-	/* TODO always multiply mode-view and projection matrix locally, then upload (best practice) */
+	/* TODO: always multiply mode-view and projection matrix locally, then upload (best practice) */
 	glUniformMatrix4fv(resources->projectionMatrixLocation, 1, GL_FALSE, resources->projection_matrix.data);
 	glUniformMatrix4fv(resources->modelViewMatrixLocation, 1, GL_FALSE, resources->model_view_matrix.data);
 }
@@ -299,13 +306,21 @@ void drawScene(GLResources* resources) {
 }
 
 void startRenderLoop(SDLContext* context, GLResources* resources) {
-	int run = 1;
 	SDL_Event event;
+	int run = 1, fullscreen = 0;
 
 	while (run) { /* main loop */
 		while (SDL_PollEvent(&event)) { /* check for new events */
-			if(event.type == SDL_QUIT) {
+			if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)) {
 				run = 0;
+			} else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_F11) {
+				SDL_SetWindowFullscreen(context->window, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+				fullscreen = !fullscreen;
+			} else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+				context->width = event.window.data1;
+				context->height = event.window.data2;
+
+				setViewport(context, resources);
 			}
 		}
 
@@ -317,8 +332,8 @@ void startRenderLoop(SDLContext* context, GLResources* resources) {
 
 void cleanUp(SDLContext* context, GLResources* resources) {
 	if (context->window != NULL) {
-		if (context->gl_context != NULL) {
-			SDL_GL_DeleteContext(context->gl_context);
+		if (context->glContext != NULL) {
+			SDL_GL_DeleteContext(context->glContext);
 
 			glDeleteProgram(resources->program.id);
 
@@ -340,7 +355,6 @@ void cleanUp(SDLContext* context, GLResources* resources) {
 	SDL_Quit();
 }
 
-// TODO: add all features from the NeHe tutorials (fullscreen, etc.)
 int main() {
 	SDLContext context;
 	GLResources resources;
@@ -348,7 +362,7 @@ int main() {
 	/* check whether OpenGL 3.2 is supported */
 	if (GL_VERSION_3_2) {
 		context.window = NULL;
-		context.gl_context = NULL;
+		context.glContext = NULL;
 
 		if (initSDL(&context, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE) && initGL(&context, &resources)) {
 			startRenderLoop(&context, &resources);
