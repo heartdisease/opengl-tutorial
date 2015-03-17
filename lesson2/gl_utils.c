@@ -10,16 +10,16 @@
 #include <stdlib.h>
 
 void printProgramInfoLog(GLProgram* program) {
-	GLchar* log_message;
-	GLint log_length;
+	GLchar* logMessage;
+	GLint logLength;
 
-	glGetProgramiv(program->id, GL_INFO_LOG_LENGTH, &log_length);
+	glGetProgramiv(program->id, GL_INFO_LOG_LENGTH, &logLength);
 
-	log_message = (GLchar*) malloc(sizeof(GLchar) * log_length);
-	glGetProgramInfoLog(program->id, log_length, NULL, log_message);
+	logMessage = (GLchar*) malloc(sizeof(GLchar) * logLength);
+	glGetProgramInfoLog(program->id, logLength, NULL, logMessage);
 
-	fprintf(stderr, "%s\n", log_message);
-	free(log_message);
+	fprintf(stderr, "%s\n", logMessage);
+	free(logMessage);
 }
 
 void checkProgramLinkStatus(GLProgram* program) {
@@ -31,7 +31,7 @@ void checkProgramLinkStatus(GLProgram* program) {
 	}
 }
 
-/* TODO: review! */
+/* TODO: review for buffer overflows */
 GLchar* getShaderSource(const char* sourceFile) {
 	long size;
 	GLchar* source;
@@ -49,16 +49,16 @@ GLchar* getShaderSource(const char* sourceFile) {
 }
 
 void printShaderInfoLog(GLShader* shader) {
-	GLchar* log_message;
-	GLint log_length;
+	GLchar* logMessage;
+	GLint logLength;
 
-	glGetShaderiv(shader->id, GL_INFO_LOG_LENGTH, &log_length);
+	glGetShaderiv(shader->id, GL_INFO_LOG_LENGTH, &logLength);
 
-	log_message = (GLchar*) malloc(sizeof(GLchar) * log_length);
-	glGetShaderInfoLog(shader->id, log_length, NULL, log_message);
+	logMessage = (GLchar*) malloc(sizeof(GLchar) * logLength);
+	glGetShaderInfoLog(shader->id, logLength, NULL, logMessage);
 
-	fprintf(stderr, "%s\n", log_message);
-	free(log_message);
+	fprintf(stderr, "%s\n", logMessage);
+	free(logMessage);
 }
 
 void checkShaderCompileStatus(GLShader* shader) {

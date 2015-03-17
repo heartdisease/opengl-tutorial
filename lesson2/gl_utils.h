@@ -12,6 +12,14 @@ typedef struct GLVertexArray {
 	GLuint id;
 } GLVertexArray;
 
+typedef struct GLAttribLocation {
+	GLint id;
+} GLAttribLocation;
+
+typedef struct GLUniformLocation {
+	GLint id;
+} GLUniformLocation;
+
 typedef struct GLBuffer {
 	GLuint  id;
 	GLenum  type;
