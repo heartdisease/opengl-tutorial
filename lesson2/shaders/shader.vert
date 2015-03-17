@@ -7,13 +7,9 @@
 #version 140
 
 in vec3 vertexAttrib;
-in vec3 colorAttrib; // lesson2
-
-out vec3 outColor; // lesson2
 
 uniform mat4 modelViewProjectionMatrix;
 
 void main() {
-	outColor = colorAttrib; // lesson2
 	gl_Position = modelViewProjectionMatrix * vec4(vertexAttrib, 1.0);
 }

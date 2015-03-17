@@ -49,10 +49,7 @@ typedef struct GLResources {
 
 	/* vertex buffer objects */
 	GLBuffer triangleVertexVBO;
-	GLBuffer triangleColorVBO;
-
 	GLBuffer quadVertexVBO;
-	GLBuffer quadColorVBO;
 } GLResources;
 
 
@@ -173,22 +170,6 @@ void initBuffers(GLResources* resources) {
 	);
 	glEnableVertexAttribArray(resources->vertexAttribLocation.id);
 
-	/* lesson 2 - upload color values */
-	glGenBuffers(1, &resources->triangleColorVBO.id);
-	glBindBuffer(GL_ARRAY_BUFFER, resources->triangleColorVBO.id);
-	glBufferData(GL_ARRAY_BUFFER,
-		sizeof(GLfloat) * resources->triangle.itemSize * resources->triangle.numItems,
-		resources->triangle.colors, GL_STATIC_DRAW);
-	glVertexAttribPointer(
-	   resources->colorAttribLocation.id,
-	   resources->triangle.itemSize,
-	   GL_FLOAT,
-	   GL_FALSE,
-	   0,
-	   (void*) 0
-	);
-	glEnableVertexAttribArray(resources->colorAttribLocation.id);
-
 	/* upload quad data */
 	glBindVertexArray(resources->quadVAO.id);
 
@@ -206,22 +187,6 @@ void initBuffers(GLResources* resources) {
 	   (void*) 0
 	);
 	glEnableVertexAttribArray(resources->vertexAttribLocation.id);
-
-	/* lesson 2 - upload color values */
-	glGenBuffers(1, &resources->quadColorVBO.id);
-	glBindBuffer(GL_ARRAY_BUFFER, resources->quadColorVBO.id);
-	glBufferData(GL_ARRAY_BUFFER,
-		sizeof(GLfloat) * resources->quad.itemSize * resources->quad.numItems,
-		resources->quad.colors, GL_STATIC_DRAW);
-	glVertexAttribPointer(
-	   resources->colorAttribLocation.id,
-	   resources->quad.itemSize,
-	   GL_FLOAT,
-	   GL_FALSE,
-	   0,
-	   (void*) 0
-	);
-	glEnableVertexAttribArray(resources->colorAttribLocation.id);
 }
 
 void setViewport(SDLContext* context, GLResources* resources) {
@@ -265,7 +230,6 @@ int initGL(SDLContext* context, GLResources* resources) {
 
 	/* get attribute and uniform locations */
 	resources->vertexAttribLocation.id = glGetAttribLocation(resources->program.id, "vertexAttrib");
-	resources->colorAttribLocation.id  = glGetAttribLocation(resources->program.id, "colorAttrib");
 
 	resources->modelViewProjectionMatrixLocation.id = glGetUniformLocation(resources->program.id, "modelViewProjectionMatrix");
 
@@ -333,9 +297,7 @@ void cleanUp(SDLContext* context, GLResources* resources) {
 			glDeleteProgram(resources->program.id);
 
 			glDeleteBuffers(1, &resources->triangleVertexVBO.id);
-			glDeleteBuffers(1, &resources->triangleColorVBO.id);
 			glDeleteBuffers(1, &resources->quadVertexVBO.id);
-			glDeleteBuffers(1, &resources->quadColorVBO.id);
 
 			glDeleteVertexArrays(1, &resources->triangleVAO.id);
 			glDeleteVertexArrays(1, &resources->quadVAO.id);
