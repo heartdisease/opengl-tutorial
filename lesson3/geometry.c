@@ -36,30 +36,34 @@ static void setColor(Geometry* geom, int i, GLfloat r, GLfloat g, GLfloat b) {
 void createTriangle(Geometry* geom) {
 	init(geom, 3);
 
-	setVertex(geom, 0,  0.0f,  1.0f, 0.0f); /* top-center */
-	setVertex(geom, 1,  1.0f, -1.0f, 0.0f); /* bottom-right */
-	setVertex(geom, 2, -1.0f, -1.0f, 0.0f); /* bottom-left */
-
-	/* lesson 2 */
+	/* top-center */
+	setVertex(geom, 0,  0.0f,  1.0f, 0.0f);
 	setColor(geom, 0, 1.0f, 0.0f, 0.0f);
+	/* bottom-right */
+	setVertex(geom, 1,  1.0f, -1.0f, 0.0f);
 	setColor(geom, 1, 0.0f, 0.0f, 1.0f);
+	/* bottom-left */
+	setVertex(geom, 2, -1.0f, -1.0f, 0.0f);
 	setColor(geom, 2, 0.0f, 1.0f, 0.0f);
 }
 
 void createQuad(Geometry* geom) {
 	init(geom, 5);
 
-	setVertex(geom, 0, -1.0f,  1.0f, 0.0f); /* Top Left */
-	setVertex(geom, 1,  1.0f,  1.0f, 0.0f); /* Top Right */
-	setVertex(geom, 2,  1.0f, -1.0f, 0.0f); /* Bottom Right */
-	setVertex(geom, 3, -1.0f, -1.0f, 0.0f); /* Bottom Left */
-	setVertex(geom, 4, -1.0f,  1.0f, 0.0f); /* Top Left */
-
-	/* lesson 2 */
+	/* Top Left */
+	setVertex(geom, 0, -1.0f,  1.0f, 0.0f);
 	setColor(geom, 0, 0.5f, 0.5f, 1.0f);
+	/* Top Right */
+	setVertex(geom, 1,  1.0f,  1.0f, 0.0f);
 	setColor(geom, 1, 0.5f, 0.5f, 1.0f);
+	/* Bottom Right */
+	setVertex(geom, 2,  1.0f, -1.0f, 0.0f);
 	setColor(geom, 2, 0.5f, 0.5f, 1.0f);
+	/* Bottom Left */
+	setVertex(geom, 3, -1.0f, -1.0f, 0.0f);
 	setColor(geom, 3, 0.5f, 0.5f, 1.0f);
+	/* Top Left */
+	setVertex(geom, 4, -1.0f,  1.0f, 0.0f);
 	setColor(geom, 4, 0.5f, 0.5f, 1.0f);
 }
 
@@ -85,8 +89,8 @@ void printGeometry(Geometry* geom) {
 
 void deleteGeometry(Geometry* geom) {
 	free(geom->vertices);
-	geom->vertices = NULL;
-	/* lesson2 */
 	free(geom->colors);
+
+	geom->vertices = NULL;
 	geom->colors = NULL;
 }
